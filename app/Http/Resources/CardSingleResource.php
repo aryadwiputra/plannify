@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\MemberResource;
+use App\Http\Resources\CommentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CardSingleResource extends JsonResource
@@ -29,11 +30,18 @@ class CardSingleResource extends JsonResource
             ],
             'status' => $this->status->value,
             'priority' => $this->priority,
-            'created_at' => $this->created_at->format('d M Y'),
+            'created_at' => $this->created_at->format('d M Y H:i'),
+            'updated_at' => $this->updated_at?->format('d M Y H:i'),
+            'deadline_date' => [
+                'format' => $this->deadline ? Carbon::createFromFormat('Y-m-d', $this->deadline)->format('d M Y') : null,
+                'unformatted' => $this->deadline,
+            ],
             'members' => MemberResource::collection($this->members),
             'members_count' => $this->members_count,
             'attachments' => $this->attachments,
+            'comments' => CommentResource::collection($this->comments),
             'has_attachment' => $this->attachments()->exists(),
+            'comments_count' => $this->comments()->count(),
             'tasks' => TaskResource::collection($this->tasks),
             'has_task' => $this->tasks()->exists(),
         ];

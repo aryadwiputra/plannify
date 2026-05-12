@@ -7,11 +7,14 @@ use App\Models\User;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class MemberCardController extends Controller
 {
     public function store(Card $card, Request $request): RedirectResponse
     {
+        Gate::authorize('member_card', $card);
+
         $request->validate([
             'email' => ['required', 'email', 'string']
         ]);
@@ -41,6 +44,9 @@ class MemberCardController extends Controller
 
     public function destroy(Card $card, Member $member): RedirectResponse
     {
+        Gate::authorize('member_card', $card);
+        abort_unless($member->memberable_type === Card::class && (int) $member->memberable_id === (int) $card->id, 404);
+
         $member->delete();
 
         flashMessage('Member successfully deleted.');

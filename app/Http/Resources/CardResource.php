@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\MemberResource;
+use App\Http\Resources\CommentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CardResource extends JsonResource
@@ -25,13 +26,20 @@ class CardResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'priority' => $this->priority,
-            'created_at' => $this->created_at->format('d M Y'),
+            'created_at' => $this->created_at->format('d M Y H:i'),
+            'updated_at' => $this->updated_at?->format('d M Y H:i'),
+            'deadline_date' => [
+                'format' => $this->deadline ? Carbon::createFromFormat('Y-m-d', $this->deadline)->format('d M Y') : null,
+                'unformatted' => $this->deadline,
+            ],
             'deadline' => $this->deadline ? (int) Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $this->deadline)) : null,
             'members' => MemberResource::collection($this->members),
             'members_count' => $this->members_count,
             'attachments' => $this->attachments,
+            'comments' => CommentResource::collection($this->comments),
             'attachments_count' => $this->attachments_count,
             'has_attachment' => $this->attachments()->exists(),
+            'comments_count' => $this->comments()->count(),
             'tasks' => TaskResource::collection($this->tasks),
             'has_task' => $this->tasks()->exists(),
             'tasks_count' => $tasks_count = $this->tasks_count,

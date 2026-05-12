@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Traits\HasFile;
 use App\Models\Attachment;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\AttachmentRequest;
 
 class AttachmentController extends Controller
@@ -15,6 +15,8 @@ class AttachmentController extends Controller
 
     public function store(Card $card, AttachmentRequest $request): RedirectResponse
     {
+        Gate::authorize('task_card', $card);
+
         $request->user()->attachments()->create([
             'card_id' => $card->id,
             'file' => $this->upload_file($request, 'file', 'attachments'),
@@ -28,11 +30,14 @@ class AttachmentController extends Controller
 
     public function destroy(Card $card, Attachment $attachment): RedirectResponse
     {
+        Gate::authorize('task_card', $card);
+        abort_unless($attachment->card_id === $card->id, 404);
+
         $this->delete_file($attachment, 'file');
 
         $attachment->delete();
 
-        flashMessage('The attachment was sucessfully deleted.');
+        flashMessage('The attachment was successfully deleted.');
         return back();
     }
 }

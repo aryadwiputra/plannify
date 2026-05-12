@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MemberCardController;
 use App\Http\Controllers\UserController;
 
@@ -70,6 +71,14 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('{card}/{task}/item', 'item')->name('item');
         Route::put('{card}/{task}/completed', 'completed')->name('completed');
+    });
+
+
+    // Comment
+    Route::prefix('cards/comments')->controller(CommentController::class)->name('comments.')->group(function () {
+        Route::post('{card}/create', 'store')->name('store');
+        Route::put('{card}/edit/{comment}', 'update')->name('update');
+        Route::delete('{card}/destroy/{comment}', 'destroy')->name('destroy');
     });
 
     // My Task

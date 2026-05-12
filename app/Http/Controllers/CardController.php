@@ -46,7 +46,7 @@ class CardController extends Controller
 
         flashMessage('Card information saved successfully');
 
-        return to_route('cards.edit', [$workspace, $card]);
+        return to_route('workspaces.show', $workspace);
     }
 
     public function show(Workspace $workspace, Card $card): Response

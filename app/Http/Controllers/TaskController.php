@@ -29,6 +29,9 @@ class TaskController extends Controller
 
     public function destroy(Card $card, Task $task): RedirectResponse
     {
+        Gate::authorize('task_card', $card);
+        abort_unless($task->card_id === $card->id, 404);
+
         $task->delete();
 
         flashMessage('The task was deleted successfully');
@@ -37,6 +40,9 @@ class TaskController extends Controller
 
     public function item(Card $card, Task $task, Request $request): RedirectResponse
     {
+        Gate::authorize('task_card', $card);
+        abort_unless($task->card_id === $card->id, 404);
+
         $request->validate([
             'item' => [
                 'required',
@@ -51,33 +57,42 @@ class TaskController extends Controller
             'title' => $request->item,
         ]);
 
-        flashMessage("Success added item to task $task->iten");
+        flashMessage("Successfully added item to task {$task->title}");
 
         return back();
     }
 
     public function completed(Card $card, Task $task): RedirectResponse
     {
-        $previous_is_completed = $task->is_completed;
+        Gate::authorize('task_card', $card);
+        abort_unless($task->card_id === $card->id, 404);
+
+        $previousIsCompleted = $task->is_completed;
         $task->update([
             'is_completed' => !$task->is_completed,
         ]);
 
-        $parent = Task::findOrFail($task->parent_id);
+        if ($task->parent_id) {
+            $parent = Task::findOrFail($task->parent_id);
 
-        if (Task::where('parent_id', $parent->id)->count() === Task::where('parent_id', $parent->id)->where('is_completed', true)->count()) {
-            $parent->update([
-                'is_completed' => true,
-            ]);
+            if (Task::where('parent_id', $parent->id)->count() === Task::where('parent_id', $parent->id)->where('is_completed', true)->count()) {
+                $parent->update([
+                    'is_completed' => true,
+                ]);
 
-            flashMessage('The task is successfully marked');
-        } else {
-            $parent->update([
-                'is_completed' => false,
-            ]);
+                flashMessage('The task is successfully marked');
+            } else {
+                $parent->update([
+                    'is_completed' => false,
+                ]);
 
-            flashMessage('The task is successfully ' . ($previous_is_completed ? 'unmarked' : 'marked'));
+                flashMessage('The task is successfully ' . ($previousIsCompleted ? 'unmarked' : 'marked'));
+            }
+
+            return back();
         }
+
+        flashMessage('The task is successfully ' . ($previousIsCompleted ? 'unmarked' : 'marked'));
 
         return back();
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\UsersSingleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaskResource extends JsonResource
@@ -21,6 +22,8 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'is_completed' => $this->is_completed,
             'parent_id' => $this->parent_id,
+            'created_at' => $this->created_at?->format('d M Y H:i'),
+            'user' => new UsersSingleResource($this->user),
             'children' => self::collection($this->children),
             'percentage' => $this->children->count() > 0
                 ? ($this->children->where('is_completed', true)->count() / $this->children->count()) * 100

@@ -56,6 +56,11 @@ class Card extends Model
         return $this->hasMany(Task::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function members(): MorphMany
     {
         return $this->morphMany(Member::class, 'memberable');
