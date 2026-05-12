@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 export default function TaskListChildrenCard({ children }) {
     return (
-        <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
+        <ul role="list" className="divide-y divide-border/60 rounded-xl border border-border/60 bg-background/75 shadow-sm dark:divide-border/50 dark:border-border/50 dark:bg-background/50">
             {children.length > 0 &&
                 children.map((item, index) => (
                     <li key={index} className="flex items-center justify-between py-6 text-sm leading-relaxed">

@@ -32,10 +32,10 @@ export default function TaskCard({ action, tasks }) {
     };
 
     return (
-        <Card className="md:col-span-2">
-            <CardContent>
+        <Card className="md:col-span-2 rounded-2xl border border-border/60 bg-background/90 shadow-sm dark:border-border/50 dark:bg-background/70">
+            <CardContent className="space-y-6">
                 <form onSubmit={onHandleSubmit}>
-                    <div className="py-6">
+                    <div className="rounded-xl border border-border/60 bg-background/70 p-4 dark:border-border/50 dark:bg-background/50">
                         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                             <div className="col-span-full">
                                 <InputLabel htmlFor="title" value="Title" />
@@ -51,8 +51,8 @@ export default function TaskCard({ action, tasks }) {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-end gap-x-2 py-6">
-                        <Button type="button" variant="ghost" onClick={() => reset()}>
+                    <div className="flex items-center justify-end gap-x-2 border-t border-border/60 pt-4 dark:border-border/50">
+                        <Button type="button" variant="ghost" className="hover:bg-muted" onClick={() => reset()}>
                             Reset
                         </Button>
                         <Button type="submit" variant="red" disabled={processing}>

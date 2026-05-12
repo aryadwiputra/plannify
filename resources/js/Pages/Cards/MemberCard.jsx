@@ -32,10 +32,10 @@ export default function MemberCard({ action, members }) {
     };
 
     return (
-        <Card className="md:col-span-2">
-            <CardContent>
+        <Card className="md:col-span-2 rounded-2xl border border-border/60 bg-background/90 shadow-sm dark:border-border/50 dark:bg-background/70">
+            <CardContent className="space-y-6">
                 <form onSubmit={onHandleSubmit}>
-                    <div className="py-6">
+                    <div className="rounded-xl border border-border/60 bg-background/70 p-4 dark:border-border/50 dark:bg-background/50">
                         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                             <div className="col-span-full">
                                 <InputLabel htmlFor="email" value="Email" />
@@ -51,8 +51,8 @@ export default function MemberCard({ action, members }) {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-end gap-x-2 py-6">
-                        <Button type="button" variant="ghost" onClick={() => reset()}>
+                    <div className="flex items-center justify-end gap-x-2 border-t border-border/60 pt-4 dark:border-border/50">
+                        <Button type="button" variant="ghost" className="hover:bg-muted" onClick={() => reset()}>
                             Reset
                         </Button>
                         <Button type="submit" variant="red" disabled={processing}>
@@ -70,8 +70,8 @@ export default function MemberCard({ action, members }) {
                     </div>
                 </form>
 
-                <div className="space-y-4 py-6">
-                    <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
+                <div className="space-y-4">
+                    <ul role="list" className="divide-y divide-border/60 rounded-xl border border-border/60 bg-background/70 dark:divide-border/50 dark:border-border/50 dark:bg-background/50">
                         {members.map((member, index) => (
                             <li
                                 key={index}
@@ -94,7 +94,7 @@ export default function MemberCard({ action, members }) {
                                     {member.role !== 'Owner' ? (
                                         <Button
                                             variant="link"
-                                            className="font-medium text-red-500 hover:text-red-600 hover:no-underline"
+                                            className="font-medium text-destructive hover:text-destructive hover:no-underline"
                                             onClick={() =>
                                                 router.delete(
                                                     route('member_card.destroy', {

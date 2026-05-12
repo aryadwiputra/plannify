@@ -46,7 +46,7 @@ export default function TaskListCard({ tasks }) {
 
     return (
         <div className="space-y-4 py-6">
-            <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
+            <ul role="list" className="divide-y divide-border/60 rounded-xl border border-border/60 bg-background/75 shadow-sm dark:divide-border/50 dark:border-border/50 dark:bg-background/50">
                 {tasks
                     .filter((task) => task.parent_id === null)
                     .map((task, index) => (
