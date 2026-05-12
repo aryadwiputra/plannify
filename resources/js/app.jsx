@@ -13,13 +13,17 @@ createInertiaApp({
     resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
     setup({ el, App, props }) {
         if (import.meta.env.DEV) {
-            createRoot(el).render(<App {...props} />);
+            createRoot(el).render(
+                <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+                    <App {...props} />
+                </ThemeProvider>
+            );
             return;
         }
 
         hydrateRoot(
             el,
-            <ThemeProvider defaultTheme="dark" storageKey="current-theme">
+            <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
                 <App {...props} />
             </ThemeProvider>,
         );

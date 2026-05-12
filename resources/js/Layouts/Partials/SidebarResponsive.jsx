@@ -3,6 +3,8 @@ import { Link } from '@inertiajs/react';
 import { PiHouse, PiLockKeyOpen, PiPlus, PiSquaresFour, PiUser } from 'react-icons/pi';
 
 export default function SidebarResponsive({ auth, url, workspaces }) {
+    const workspaceItems = Array.isArray(workspaces) ? workspaces : (workspaces?.data ?? []);
+
     return (
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2 dark:bg-gray-800">
             <div className="flex h-16 shrink-0 items-center space-x-1.5">
@@ -108,13 +110,12 @@ export default function SidebarResponsive({ auth, url, workspaces }) {
                             </Link>
                         </div>
                         <ul role="list" className="-mx-2 mt-2 space-y-1">
-                            {workspaces.map((workspace, index) => (
+                            {workspaceItems.map((workspace, index) => (
                                 <li key={index}>
                                     <Link
                                         href={route('workspaces.show', [workspace.memberable.slug])}
                                         className={cn(
-                                            route().current('workspaces.show', [workspace.memberable.slug]) ||
-                                                route().current()
+                                            route().current('workspaces.show', [workspace.memberable.slug])
                                                 ? 'bg-red-500 text-white'
                                                 : 'text-foreground hover:bg-gray-100 dark:hover:bg-red-500',
                                             'group flex w-full items-center gap-x-3 rounded-md p-3 text-sm font-semibold leading-relaxed',
@@ -122,8 +123,7 @@ export default function SidebarResponsive({ auth, url, workspaces }) {
                                     >
                                         <span
                                             className={cn(
-                                                route().current('workspaces.show', [workspace.memberable.slug]) ||
-                                                    route().current()
+                                                route().current('workspaces.show', [workspace.memberable.slug])
                                                     ? 'border-red-600 text-red-600'
                                                     : 'border-foreground text-foreground',
                                                 'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',

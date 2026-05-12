@@ -5,6 +5,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Fragment, useState } from 'react';
 import { PiSidebar, PiX } from 'react-icons/pi';
+import { CommandPalette } from '@/Components/CommandPalette';
 import Sidebar from './Partials/Sidebar';
 import SidebarResponsive from './Partials/SidebarResponsive';
 
@@ -98,6 +99,10 @@ export default function AppLayout({ children, title }) {
                         <PiSidebar className="h-6 w-6 text-foreground" aria-hidden="true" />
                     </button>
                     <div className="flex-1 text-sm font-semibold leading-relaxed tracking-tighter text-foreground">
+                        <div className="hidden md:block">
+                            <CommandPalette workspaces={workspaces} />
+                        </div>
+
                         {title}
                     </div>
                     <Link href="#">

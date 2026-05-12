@@ -7,6 +7,7 @@ use Inertia\Response;
 use App\Models\Member;
 use App\Traits\HasFile;
 use App\Enums\CardStatus;
+use App\Enums\CardPriority;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use App\Enums\WorkspaceVisibility;
@@ -54,6 +55,7 @@ class WorkspaceController extends Controller
             'cards' => fn() =>  CardResource::collection($workspace->load([
                 'cards' => fn($q) => $q->withCount(['tasks', 'members', 'attachments'])->with([
                     'attachments',
+                    'comments.user',
                     'members',
                     'tasks' => fn($task) => $task->withCount('children')
                 ])->orderBy('order'),
@@ -63,6 +65,7 @@ class WorkspaceController extends Controller
                 'title' => $workspace->name,
             ],
             'statuses' => fn() => CardStatus::options(),
+            'priorities' => fn() => CardPriority::options(),
         ]);
     }
 
@@ -89,8 +92,8 @@ class WorkspaceController extends Controller
         $workspace->update([
             'name' => $name = $request->name,
             'slug' => str()->slug($name . str()->uuid(10)),
-            'cover' => $request->hasFile('cover') ? $this->upload_file($request, 'cover', 'workspaces/cover') : $workspace->cover,
-            'logo' => $request->hasFile('logo') ? $this->upload_file($request, 'logo', 'workspaces/logo') : $workspace->logo,
+            'cover' => $this->update_file($request, $workspace, 'cover', 'workspaces/cover'),
+            'logo' => $this->update_file($request, $workspace, 'logo', 'workspaces/logo'),
             'visibility' => $request->visibility,
         ]);
 

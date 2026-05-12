@@ -6,11 +6,11 @@ use App\Models\Workspace;
 
 class WorkspaceObserver
 {
-    public function craeted(Workspace $workspace)
+    public function created(Workspace $workspace)
     {
         $workspace->members()->create([
-            'user_id' => request()->user()->id,
-            'role' => $workspace->user_id == request()->user()->id ? 'Owner' : 'Member',
+            'user_id' => $workspace->user_id,
+            'role' => 'Owner',
         ]);
     }
 

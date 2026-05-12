@@ -43,12 +43,28 @@ class HandleInertiaRequests extends Middleware
                 'type' => $request->session()->get('type'),
                 'message' => $request->session()->get('message'),
             ],
-            'workspaces' => fn() => $request->user() ? WorkspaceSidebarResource::collection(
-                Member::query()
+            'workspaces' => function () use ($request) {
+                if (!$request->user()) {
+                    return [];
+                }
+
+                Workspace::query()
                     ->where('user_id', $request->user()->id)
-                    ->whereHasMorph('memberable', Workspace::class)
+                    ->whereDoesntHave('members', fn($query) => $query->where('user_id', $request->user()->id))
                     ->get()
-            ) : null,
+                    ->each(fn($workspace) => $workspace->members()->create([
+                        'user_id' => $request->user()->id,
+                        'role' => 'Owner',
+                    ]));
+
+                return WorkspaceSidebarResource::collection(
+                    Member::query()
+                        ->with('memberable')
+                        ->where('user_id', $request->user()->id)
+                        ->whereHasMorph('memberable', Workspace::class)
+                        ->get()
+                )->resolve();
+            },
         ];
     }
 }

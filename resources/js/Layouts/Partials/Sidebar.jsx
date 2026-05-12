@@ -4,6 +4,8 @@ import { Link } from '@inertiajs/react';
 import { PiHouse, PiLockKeyOpen, PiPlus, PiSquaresFour, PiUser } from 'react-icons/pi';
 
 export default function Sidebar({ auth, url, workspaces }) {
+    const workspaceItems = Array.isArray(workspaces) ? workspaces : (workspaces?.data ?? []);
+
     return (
         <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -103,12 +105,12 @@ export default function Sidebar({ auth, url, workspaces }) {
                         </Link>
                     </div>
                     <ul role="list" className="-mx-2 mt-2 space-y-2">
-                        {workspaces.map((workspace, index) => (
+                        {workspaceItems.map((workspace, index) => (
                             <li key={index}>
                                 <Link
                                     href={route('workspaces.show', [workspace.memberable.slug])}
                                     className={cn(
-                                        route().current('workspace.show', [workspace.memberable.slug])
+                                        route().current('workspaces.show', [workspace.memberable.slug])
                                             ? 'bg-red-500 text-white'
                                             : 'text-foreground hover:bg-gray-100 dark:hover:bg-red-500',
                                         'group flex w-full items-center gap-x-3 rounded-md p-3 text-sm font-semibold leading-relaxed',
@@ -116,7 +118,7 @@ export default function Sidebar({ auth, url, workspaces }) {
                                 >
                                     <span
                                         className={cn(
-                                            route().current('workspace.show', [workspace.memberable.slug])
+                                            route().current('workspaces.show', [workspace.memberable.slug])
                                                 ? 'border-red-600 text-red-600'
                                                 : 'border-foreground text-foreground',
                                             'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
@@ -128,6 +130,11 @@ export default function Sidebar({ auth, url, workspaces }) {
                                 </Link>
                             </li>
                         ))}
+                        {workspaceItems.length === 0 && (
+                            <li className="rounded-md border border-dashed border-gray-200 px-3 py-4 text-sm text-muted-foreground dark:border-gray-700">
+                                No workspaces yet
+                            </li>
+                        )}
                     </ul>
                 </li>
                 <li className="-mx-6 mt-auto">

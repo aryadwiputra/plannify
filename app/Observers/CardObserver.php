@@ -6,11 +6,11 @@ use App\Models\Card;
 
 class CardObserver
 {
-    public function craeted(Card $card)
+    public function created(Card $card)
     {
         $card->members()->create([
-            'user_id' => request()->user()->id,
-            'role' => $card->user_id == request()->user()->id ? 'Owner' : 'Member',
+            'user_id' => $card->user_id,
+            'role' => 'Owner',
         ]);
     }
 
